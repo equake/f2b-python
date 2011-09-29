@@ -123,5 +123,5 @@ class F2bClient(object):
     
  
 f2b = F2bClient('9023010246390100', '696969')
-registros = f2b.situacao_cobranca(situacao=0, registro='2011-10-20', registro_final='2011-10-28')
+registros = f2b.situacao_cobranca(situacao=0, registro='2011-09-01', registro_final='2011-10-28')
 print json.dumps(registros, indent=4)
