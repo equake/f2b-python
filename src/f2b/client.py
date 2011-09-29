@@ -48,7 +48,7 @@ class F2bClient(object):
         f2b.situacao_cobranca(numero_documento='123456')
         '''
         h = httplib2.Http()
-        query = self.__create_query(cobranca={'situacao': 0, 'registro': '2011-01-01', 'registro_final': '2011-10-25'})
+        query = self.__create_query(cobranca=kwargs)
         soap = self.__soap_message(self.__situacao_cobranca['xsd'], 'F2bSituacaoCobranca', query)
         headers = {'SOAPAction': self.__situacao_cobranca['url']}
         headers.update(self.__headers)
@@ -94,9 +94,8 @@ class F2bClient(object):
     
         def __init__(self, xml_string):
             '''
-            Constructor
+            Construtor
             '''
-            print xml_string
             self.dom = parseString(xml_string)
     
         def parse(self, root_node):
@@ -105,6 +104,9 @@ class F2bClient(object):
             '''
             nodes = self.dom.getElementsByTagName(root_node)
 
+            if len(nodes) == 0:
+                return None
+            
             first_node = nodes[0].firstChild
             if first_node != None and first_node.nodeName == '#text':
                 return first_node.data
@@ -117,8 +119,9 @@ class F2bClient(object):
                 for child in node.childNodes:
                     result[child.nodeName] = child.firstChild.data
                 results.append(result)
-            return results      
+            return results
     
  
-x = F2bClient('9023010246390100', '696969')
-print json.dumps(x.situacao_cobranca(), indent=4)
+f2b = F2bClient('9023010246390100', '696969')
+registros = f2b.situacao_cobranca(situacao=0, registro='2011-10-20', registro_final='2011-10-28')
+print json.dumps(registros, indent=4)
